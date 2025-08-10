@@ -12,7 +12,14 @@ import requests
 import re
 import os
 from io import BytesIO
-import PyPDF2
+try:
+    import PyPDF2
+except ImportError:
+    try:
+        from pypdf import PdfReader as PyPDF2Reader
+        PyPDF2 = type('PyPDF2', (), {'PdfReader': PyPDF2Reader})
+    except ImportError:
+        raise ImportError("Neither PyPDF2 nor pypdf could be imported")
 import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
