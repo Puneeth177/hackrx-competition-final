@@ -1,0 +1,1 @@
+web: python -m uvicorn hackrx_api_production:app --host 0.0.0.0 --port $PORT

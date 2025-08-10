@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: hackrx-api
+    env: python
+    buildCommand: "pip install -r requirements_optimized.txt"
+    startCommand: "python deploy_production.py"
+    envVars:
+      - key: ADVANCED_MODEL_NAME
+        value: google/flan-t5-base
+      - key: USE_ADVANCED_MODEL
+        value: false
+      - key: PORT
+        value: 10000
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    # Optional: Add HUGGINGFACEHUB_API_TOKEN if you need private models
+    # - key: HUGGINGFACEHUB_API_TOKEN
+    #   sync: false

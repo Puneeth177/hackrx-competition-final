@@ -1,0 +1,73 @@
+# Core AI and ML packages
+openai>=1.0.0
+transformers>=4.35.0
+torch>=2.0.0
+sentence-transformers>=2.2.0
+accelerate>=0.24.0
+bitsandbytes>=0.41.0
+
+# LangChain ecosystem
+langchain>=0.0.350
+langchain_community>=0.0.10
+langchain-openai>=0.0.5
+langchain-huggingface>=0.0.1
+
+# Vector database and search
+faiss-cpu>=1.7.4
+chromadb>=0.4.0
+
+# Document processing
+pypdf>=3.17.0
+python-docx>=0.8.11
+unstructured>=0.11.0
+python-multipart>=0.0.6
+
+# Web framework and API
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+aiohttp>=3.9.0
+aiofiles>=23.2.0
+
+# Data processing and utilities
+pandas>=2.1.0
+numpy>=1.24.0
+python-dotenv>=1.0.0
+python-jose[cryptography]>=3.3.0
+
+
+
+# EXTREME Natural Language Processing
+spacy>=3.7.0
+nltk>=3.8.0
+textblob>=0.17.0
+scikit-learn>=1.3.0
+psutil>=5.9.0
+
+# Additional NLP libraries for extreme processing
+wordcloud>=1.9.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Audio processing (for voice input)
+speechrecognition>=3.10.0
+pyaudio>=0.2.11
+
+# Development and testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.0.0
+
+# Monitoring and logging
+loguru>=0.7.0
+prometheus-client>=0.19.0
+
+# Security
+cryptography>=41.0.0
+passlib[bcrypt]>=1.7.4
+
+# Optional: GPU acceleration (uncomment if using CUDA)
+# torch-audio>=2.0.0
+# torchaudio>=2.0.0
