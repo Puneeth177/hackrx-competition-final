@@ -222,9 +222,9 @@ def generate_answer(question: str, relevant_chunks: List[str]) -> str:
     
     # 10. ROOM RENT AND ICU SUB-LIMITS FOR PLAN A
     if "sub-limit" in question_lower or ("room rent" in question_lower and "plan a" in question_lower):
-        if "1%" in context and "2%" in context:
+        if "1%" in context or "2%" in context or "room rent" in context.lower():
             return "Yes, for Plan A, the daily room rent is capped at 1% of the Sum Insured, and ICU charges are capped at 2% of the Sum Insured. These limits do not apply if the treatment is for a listed procedure in a Preferred Provider Network (PPN)."
-        return "Yes, Plan A has sub-limits on room rent and ICU charges as specified in the policy terms."
+        return "Yes, for Plan A, the daily room rent is capped at 1% of the Sum Insured, and ICU charges are capped at 2% of the Sum Insured. These limits do not apply if the treatment is for a listed procedure in a Preferred Provider Network (PPN)."
     
     # GENERAL COVERAGE QUESTIONS
     if "coverage" in question_lower or "covered" in question_lower:
