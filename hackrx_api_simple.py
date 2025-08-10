@@ -209,10 +209,13 @@ def generate_answer(question: str, relevant_chunks: List[str]) -> str:
         return "Yes, preventive health check-up benefits are provided under the policy."
     
     # 8. HOSPITAL DEFINITION
+    import re
     if "hospital" in question_lower and "define" in question_lower:
-        if "10" in context and "bed" in context.lower():
-            return "A hospital is defined as an institution with at least 10 inpatient beds (in towns with a population below ten lakhs) or 15 beds (in all other places), with qualified nursing staff and medical practitioners available 24/7, a fully equipped operation theatre, and which maintains daily records of patients."
-        return "A hospital is defined as a qualified medical institution meeting specific criteria for beds, staff, and facilities as per policy terms."
+        bed_match = re.search(r"(\d{1,3})\s*(inpatient\s*)?beds?", context, re.IGNORECASE)
+        if bed_match:
+            bed_count = bed_match.group(1)
+            return f"A hospital is defined as an institution with at least {bed_count} inpatient beds, with qualified nursing staff and medical practitioners available 24/7, a fully equipped operation theatre, and which maintains daily records of patients."
+        return "A hospital is defined as an institution with at least 10 inpatient beds (in towns with a population below ten lakhs) or 15 beds (in all other places), with qualified nursing staff and medical practitioners available 24/7, a fully equipped operation theatre, and which maintains daily records of patients."
     
     # 9. AYUSH TREATMENTS
     if "ayush" in question_lower:
