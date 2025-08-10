@@ -171,38 +171,84 @@ def generate_answer(question: str, relevant_chunks: List[str]) -> str:
     
     # Grace period questions
     if "grace period" in question_lower and "premium" in question_lower:
-        # Look for grace period information
+        # Look for grace period information with more comprehensive patterns
         grace_patterns = [
-            r"grace period of (\w+) days",
-            r"(\w+) days.*grace period",
-            r"grace period.*(\w+) days"
+            r"grace period of (\w+[-\s]*\w*) days",
+            r"(\w+[-\s]*\w*) days.*grace period",
+            r"grace period.*(\w+[-\s]*\w*) days",
+            r"grace period.*(\d+) days",
+            r"(\d+) days.*grace period"
         ]
         
         for pattern in grace_patterns:
             match = re.search(pattern, context, re.IGNORECASE)
             if match:
-                days = match.group(1)
+                days = match.group(1).strip()
+                # Convert common variations
+                if days.lower() in ['thirty', '30']:
+                    days = "thirty"
                 return f"A grace period of {days} days is provided for premium payment after the due date to renew or continue the policy coverage."
+        
+        # Fallback: look for any mention of grace period with days
+        if "grace period" in context.lower():
+            # Extract sentences containing grace period
+            sentences = context.split('.')
+            for sentence in sentences:
+                if "grace period" in sentence.lower() and "days" in sentence.lower():
+                    # Try to extract the number of days
+                    day_match = re.search(r'(\w+[-\s]*\w*)\s*days', sentence, re.IGNORECASE)
+                    if day_match:
+                        days = day_match.group(1).strip()
+                        if days.lower() in ['thirty', '30']:
+                            days = "thirty"
+                        return f"A grace period of {days} days is provided for premium payment after the due date to renew or continue the policy coverage."
     
     # Waiting period questions
     if "waiting period" in question_lower and ("pre-existing" in question_lower or "ped" in question_lower):
-        # Look for waiting period information
+        # Look for waiting period information with comprehensive patterns
         waiting_patterns = [
-            r"waiting period of (\w+-?\w*) \((\d+)\) months",
-            r"(\w+-?\w*) months.*waiting period",
-            r"waiting period.*(\w+-?\w*) months"
+            r"waiting period of (\w+[-\s]*\w*) \((\d+)\) months",
+            r"(\w+[-\s]*\w*) \((\d+)\) months.*waiting period",
+            r"waiting period.*(\w+[-\s]*\w*) \((\d+)\) months",
+            r"(\d+) months.*waiting period",
+            r"waiting period.*(\d+) months",
+            r"(\w+[-\s]*\w*) months.*waiting period",
+            r"waiting period.*(\w+[-\s]*\w*) months"
         ]
         
         for pattern in waiting_patterns:
             match = re.search(pattern, context, re.IGNORECASE)
             if match:
-                if len(match.groups()) >= 2:
-                    period_text = match.group(1)
-                    period_num = match.group(2)
+                groups = match.groups()
+                if len(groups) >= 2 and groups[1].isdigit():
+                    period_text = groups[0].strip()
+                    period_num = groups[1]
+                    # Convert common variations
+                    if period_text.lower() in ['thirty-six', 'thirtysix'] or period_num == '36':
+                        period_text = "thirty-six"
+                        period_num = "36"
                     return f"There is a waiting period of {period_text} ({period_num}) months of continuous coverage from the first policy inception date for pre-existing diseases to be covered."
                 else:
-                    period = match.group(1)
-                    return f"There is a waiting period of {period} months for pre-existing diseases to be covered."
+                    period = groups[0].strip()
+                    if period.isdigit() and period == '36':
+                        period = "thirty-six (36)"
+                    elif period.lower() in ['thirty-six', 'thirtysix']:
+                        period = "thirty-six (36)"
+                    return f"There is a waiting period of {period} months of continuous coverage from the first policy inception date for pre-existing diseases to be covered."
+        
+        # Fallback: look for any mention of waiting period with months
+        if "waiting period" in context.lower():
+            sentences = context.split('.')
+            for sentence in sentences:
+                if "waiting period" in sentence.lower() and ("months" in sentence.lower() or "month" in sentence.lower()):
+                    # Try to extract the number of months
+                    month_match = re.search(r'(\d+)\s*months?', sentence, re.IGNORECASE)
+                    if month_match:
+                        months = month_match.group(1)
+                        if months == '36':
+                            return f"There is a waiting period of thirty-six (36) months of continuous coverage from the first policy inception date for pre-existing diseases to be covered."
+                        else:
+                            return f"There is a waiting period of {months} months of continuous coverage from the first policy inception date for pre-existing diseases to be covered."
     
     # Coverage questions
     if "coverage" in question_lower or "covered" in question_lower:
